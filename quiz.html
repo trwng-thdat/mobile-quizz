@@ -1,0 +1,48 @@
+﻿<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Android Quiz - Luyện Tập Trắc Nghiệm</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>Android Quiz</h1>
+        <div class="summary" aria-live="polite">
+          <div class="summary-item">
+            <span class="summary-label">Tổng câu</span>
+            <span class="summary-value" id="totalCount">0</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Đã làm</span>
+            <span class="summary-value" id="answeredCount">0</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Đúng</span>
+            <span class="summary-value" id="correctCount">-</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Điểm</span>
+            <span class="summary-value" id="scorePercent">-</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-secondary" id="shuffleBtn" type="button">Đảo đề</button>
+          <button class="btn btn-primary" id="gradeBtn" type="button">Chấm điểm</button>
+          <button class="btn btn-secondary" id="resetBtn" type="button">Làm lại</button>
+        </div>
+      </header>
+
+      <section class="result-panel" id="resultPanel" aria-live="polite">
+        <h2 id="resultTitle"></h2>
+        <p id="resultText"></p>
+      </section>
+
+      <section class="question-list" id="questionList" aria-label="Danh sách câu hỏi"></section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
