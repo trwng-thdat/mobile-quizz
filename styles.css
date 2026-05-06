@@ -235,6 +235,14 @@ body {
   background: #fef2f2;
 }
 
+.option.locked {
+  cursor: not-allowed;
+}
+
+.option.locked input {
+  cursor: not-allowed;
+}
+
 .option.correct .option-text::after {
   content: " ✓";
   color: #16a34a;

@@ -701,7 +701,7 @@ let currentQuizIndex = 0;
 let currentQuizData = quizSets[currentQuizIndex].questions;
 let displayedQuestions = [...currentQuizData];
 let answers = new Map();
-let hasSubmitted = false;
+let isSubmitted = false;
 const answerLabels = ["A", "B", "C", "D"];
 
 const quizNav = document.getElementById("quizNav");
@@ -954,7 +954,7 @@ function switchQuiz(index) {
   currentQuizData = quizSets[currentQuizIndex].questions;
   displayedQuestions = [...currentQuizData];
   answers = new Map();
-  hasSubmitted = false;
+  isSubmitted = false;
   resultPanel.classList.remove("show");
   closeResultModal();
   renderQuizNav();
@@ -997,6 +997,7 @@ function renderQuestions() {
       radio.name = `question-${question.id}`;
       radio.value = optionIndex;
       radio.checked = answers.get(question.id) === optionIndex;
+      radio.disabled = isSubmitted;
 
       const optionText = document.createElement("span");
       optionText.className = "option-text";
@@ -1015,18 +1016,17 @@ function renderQuestions() {
   });
 
   refreshSelections();
-  if (hasSubmitted) {
+  if (isSubmitted) {
     showGrading();
   }
 }
 
 function selectAnswer(questionId, optionIndex) {
-  answers.set(questionId, optionIndex);
-  if (hasSubmitted) {
-    hasSubmitted = false;
-    resultPanel.classList.remove("show");
-    closeResultModal();
+  if (isSubmitted) {
+    return;
   }
+
+  answers.set(questionId, optionIndex);
   refreshSelections();
   updateSummary();
 }
@@ -1040,8 +1040,10 @@ function refreshSelections() {
       const optionIndex = Number(optionEl.dataset.optionIndex);
       const checked = selected === optionIndex;
       optionEl.classList.toggle("selected", checked);
+      optionEl.classList.toggle("locked", isSubmitted);
       optionEl.classList.remove("correct", "incorrect");
       optionEl.querySelector("input").checked = checked;
+      optionEl.querySelector("input").disabled = isSubmitted;
     });
 
     const feedback = card.querySelector(".question-feedback");
@@ -1125,8 +1127,9 @@ function closeResultModal() {
 
 function gradeQuiz() {
   const score = calculateScore();
-  hasSubmitted = true;
+  isSubmitted = true;
   updateSummary(score);
+  refreshSelections();
   showGrading();
 
   resultTitle.innerText = `Kết quả: ${score.correct}/${score.total} câu đúng (${score.percent}%)`;
@@ -1137,6 +1140,9 @@ function gradeQuiz() {
 }
 
 function shuffleQuestions() {
+  isSubmitted = false;
+  resultPanel.classList.remove("show");
+  closeResultModal();
   displayedQuestions = [...displayedQuestions]
     .map((question) => ({ question, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -1148,7 +1154,7 @@ function shuffleQuestions() {
 
 function resetQuiz() {
   answers = new Map();
-  hasSubmitted = false;
+  isSubmitted = false;
   resultPanel.classList.remove("show");
   closeResultModal();
   updateSummary();
