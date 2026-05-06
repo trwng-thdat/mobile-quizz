@@ -715,6 +715,12 @@ const resultText = document.getElementById("resultText");
 const shuffleBtn = document.getElementById("shuffleBtn");
 const gradeBtn = document.getElementById("gradeBtn");
 const resetBtn = document.getElementById("resetBtn");
+const resultModal = document.getElementById("resultModal");
+const modalQuizName = document.getElementById("modalQuizName");
+const modalScore = document.getElementById("modalScore");
+const modalNote = document.getElementById("modalNote");
+const modalCloseBtn = document.getElementById("modalCloseBtn");
+const modalOkBtn = document.getElementById("modalOkBtn");
 
 function createQuestion(id, question, options, correctIndex) {
   return {
@@ -948,6 +954,7 @@ function switchQuiz(index) {
   answers = new Map();
   hasSubmitted = false;
   resultPanel.classList.remove("show");
+  closeResultModal();
   renderQuizNav();
   updateSummary();
   renderQuestions();
@@ -1016,6 +1023,7 @@ function selectAnswer(questionId, optionIndex) {
   if (hasSubmitted) {
     hasSubmitted = false;
     resultPanel.classList.remove("show");
+    closeResultModal();
   }
   refreshSelections();
   updateSummary();
@@ -1101,6 +1109,18 @@ function showGrading() {
   });
 }
 
+function openResultModal(score) {
+  modalQuizName.innerText = quizSets[currentQuizIndex].title;
+  modalScore.innerText = `${score.correct}/${score.total} câu đúng`;
+  modalNote.innerText = `Bạn đã làm ${score.answered}/${score.total} câu trong đề này.`;
+  resultModal.classList.add("show");
+  modalOkBtn.focus();
+}
+
+function closeResultModal() {
+  resultModal.classList.remove("show");
+}
+
 function gradeQuiz() {
   const score = calculateScore();
   hasSubmitted = true;
@@ -1110,6 +1130,7 @@ function gradeQuiz() {
   resultTitle.innerText = `Kết quả: ${score.correct}/${score.total} câu đúng (${score.percent}%)`;
   resultText.innerText = `Bạn đã làm ${score.answered}/${score.total} câu. Các câu chưa làm được tính là sai.`;
   resultPanel.classList.add("show");
+  openResultModal(score);
   resultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -1127,6 +1148,7 @@ function resetQuiz() {
   answers = new Map();
   hasSubmitted = false;
   resultPanel.classList.remove("show");
+  closeResultModal();
   updateSummary();
   renderQuestions();
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1135,6 +1157,18 @@ function resetQuiz() {
 shuffleBtn.addEventListener("click", shuffleQuestions);
 gradeBtn.addEventListener("click", gradeQuiz);
 resetBtn.addEventListener("click", resetQuiz);
+modalCloseBtn.addEventListener("click", closeResultModal);
+modalOkBtn.addEventListener("click", closeResultModal);
+resultModal.addEventListener("click", (event) => {
+  if (event.target === resultModal) {
+    closeResultModal();
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && resultModal.classList.contains("show")) {
+    closeResultModal();
+  }
+});
 
 renderQuizNav();
 renderQuestions();

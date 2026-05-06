@@ -44,6 +44,17 @@
       <section class="question-list" id="questionList" aria-label="Danh sách câu hỏi"></section>
     </main>
 
+    <div class="modal-backdrop" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal">
+        <button class="modal-close" id="modalCloseBtn" type="button" aria-label="Đóng thông báo">×</button>
+        <p class="modal-kicker" id="modalQuizName"></p>
+        <h2 id="modalTitle">Kết quả nộp bài</h2>
+        <p class="modal-score" id="modalScore"></p>
+        <p class="modal-note" id="modalNote"></p>
+        <button class="btn btn-primary modal-action" id="modalOkBtn" type="button">Đã hiểu</button>
+      </div>
+    </div>
+
     <script src="app.js"></script>
   </body>
 </html>
