@@ -682,10 +682,24 @@
           ],
         },
       ];
-let displayedQuestions = [...quizData];
+const quizSets = [
+  {
+    title: "Đề 1",
+    questions: quizData,
+  },
+  {
+    title: "Đề 2",
+    questions: createSecondQuizData(),
+  },
+];
+
+let currentQuizIndex = 0;
+let currentQuizData = quizSets[currentQuizIndex].questions;
+let displayedQuestions = [...currentQuizData];
 let answers = new Map();
 let hasSubmitted = false;
 
+const quizNav = document.getElementById("quizNav");
 const questionList = document.getElementById("questionList");
 const totalCount = document.getElementById("totalCount");
 const answeredCount = document.getElementById("answeredCount");
@@ -698,7 +712,113 @@ const shuffleBtn = document.getElementById("shuffleBtn");
 const gradeBtn = document.getElementById("gradeBtn");
 const resetBtn = document.getElementById("resetBtn");
 
-totalCount.innerText = quizData.length;
+function createQuestion(id, question, options, correctIndex) {
+  return {
+    id,
+    question,
+    options: options.map((text, index) => ({
+      text,
+      correct: index === correctIndex,
+    })),
+  };
+}
+
+function createSecondQuizData() {
+  return [
+    createQuestion(1, "ListView trong Android chủ yếu dùng để làm gì?", ["Hiển thị một view đơn", "Hiển thị danh sách dữ liệu có thể cuộn", "Hiển thị hình ảnh toàn màn hình", "Quản lý vòng đời Activity"], 1),
+    createQuestion(2, "Thành phần nào đóng vai trò trung gian giữa dữ liệu và ListView?", ["ViewHolder", "Adapter", "Fragment", "LayoutInflater"], 1),
+    createQuestion(3, "ArrayAdapter thường được dùng tốt nhất cho loại dữ liệu nào?", ["Object phức tạp", "Cursor", "String hoặc kiểu đơn giản", "Bitmap"], 2),
+    createQuestion(4, "Phương thức nào cần override khi tạo Custom Adapter?", ["onCreate()", "onBind()", "getView()", "setAdapter()"], 2),
+    createQuestion(5, "File XML nào định nghĩa giao diện cho mỗi dòng trong ListView tùy biến?", ["activity_main.xml", "AndroidManifest.xml", "item_layout.xml", "styles.xml"], 2),
+    createQuestion(6, "Sự kiện click vào một dòng ListView được xử lý bằng?", ["setOnClickListener()", "setOnItemClickListener()", "onTouchEvent()", "onLongClick()"], 1),
+    createQuestion(7, "ArrayAdapter kế thừa trực tiếp từ lớp nào?", ["View", "RecyclerView.Adapter", "BaseAdapter", "Context"], 2),
+    createQuestion(8, "ListView có đặc điểm nào sau đây?", ["Không cuộn được", "Chỉ hiển thị dữ liệu nhỏ", "Có thể hiển thị tập dữ liệu lớn", "Không hỗ trợ click"], 2),
+    createQuestion(9, "Khi dữ liệu là object tự định nghĩa, ArrayAdapter cần gì để hiển thị đúng?", ["Serializable", "Parcelable", "Override toString()", "Cloneable"], 2),
+    createQuestion(10, "ListView nằm trong nhóm widget nào?", ["Text", "Layout", "Containers", "Animations"], 2),
+    createQuestion(11, "RecyclerView khác ListView ở điểm nào?", ["Không cần Adapter", "Hiệu năng cao hơn, linh hoạt hơn", "Không cuộn được", "Không dùng LayoutManager"], 1),
+    createQuestion(12, "Spinner trong Android dùng để làm gì?", ["Hiển thị ảnh", "Hiển thị danh sách chọn thả xuống", "Cuộn ngang", "Phát nhạc"], 1),
+    createQuestion(13, "GridView phù hợp nhất khi hiển thị?", ["Văn bản dài", "Form nhập liệu", "Dữ liệu dạng lưới (ảnh, icon)", "Menu hệ thống"], 2),
+    createQuestion(14, "Adapter có nhiệm vụ chính là gì?", ["Lưu dữ liệu", "Quản lý Activity", "Chuyển dữ liệu thành View", "Điều hướng màn hình"], 2),
+    createQuestion(15, "ListView có thể hiển thị mỗi dòng gồm?", ["Chỉ TextView", "Chỉ ImageView", "Text và Image", "Chỉ Button"], 2),
+    createQuestion(16, "Khi click vào item, vị trí item được truyền qua biến nào?", ["view", "parent", "position", "id"], 2),
+    createQuestion(17, "Custom Adapter thường dùng khi nào?", ["Chỉ có String", "Không cần layout", "Item có nhiều thành phần UI", "Không có dữ liệu"], 2),
+    createQuestion(18, "ListView có thể đặt trong layout nào sau đây?", ["ConstraintLayout", "LinearLayout", "RelativeLayout", "Tất cả đều đúng"], 3),
+    createQuestion(19, "Phương thức setAdapter() dùng để?", ["Tạo Adapter", "Gán Adapter cho ListView", "Xóa Adapter", "Cập nhật dữ liệu"], 1),
+    createQuestion(20, "ListView là widget phổ biến nhất để?", ["Nhập liệu", "Vẽ đồ họa", "Hiển thị danh sách dữ liệu", "Điều hướng"], 2),
+    createQuestion(21, "HorizontalScrollView cho phép cuộn theo hướng nào?", ["Trên - dưới", "Trái - phải", "Chéo", "Không cuộn"], 1),
+    createQuestion(22, "HorizontalScrollView thường chứa bao nhiêu View con trực tiếp?", ["Không giới hạn", "2", "1", "4"], 2),
+    createQuestion(23, "HorizontalScrollView thường dùng để hiển thị?", ["Form nhập", "Danh sách lựa chọn nhỏ", "Văn bản dài", "Bản đồ"], 2),
+    createQuestion(24, "Widget nào thường đặt bên trong HorizontalScrollView?", ["ConstraintLayout", "LinearLayout", "FrameLayout", "Tất cả đều đúng"], 1),
+    createQuestion(25, "Hành động người dùng với HorizontalScrollView gồm?", ["Zoom", "Scroll và Click", "Drag & Drop", "Rotate"], 1),
+    createQuestion(26, "HorizontalScrollView kế thừa từ lớp nào?", ["View", "ViewGroup", "ScrollView", "FrameLayout"], 2),
+    createQuestion(27, "Khi muốn tạo item động trong HorizontalScrollView, ta thường dùng?", ["XML tĩnh", "LayoutInflater", "Intent", "Manifest"], 1),
+    createQuestion(28, "HorizontalScrollView phù hợp nhất cho UI nào?", ["Danh sách dài", "Menu ngang, chọn màu", "Bảng dữ liệu", "Biểu đồ"], 1),
+    createQuestion(29, "Trong ví dụ chọn màu, click vào item sẽ làm gì?", ["Đổi background Activity", "Đổi textColor của TextView", "Thoát app", "Mở Activity mới"], 0),
+    createQuestion(30, "Để tạo hiệu ứng bo tròn cho Button, dùng resource nào?", ["animation", "color", "shape drawable", "layout"], 2),
+    createQuestion(31, "HorizontalScrollView thường đặt ở đâu trên màn hình?", ["Dưới cùng", "Bên trái", "Trên cùng", "Bất kỳ vị trí nào"], 3),
+    createQuestion(32, "Thuộc tính nào xác định chiều cao HorizontalScrollView?", ["layout_width", "layout_height", "padding", "margin"], 1),
+    createQuestion(33, "Để thêm View vào layout trong code, dùng hàm?", ["setView()", "addView()", "inflateView()", "createView()"], 1),
+    createQuestion(34, "ConstraintSet được dùng để?", ["Tạo Activity", "Gán Adapter", "Ràng buộc layout động", "Xử lý sự kiện"], 2),
+    createQuestion(35, "HorizontalScrollView phù hợp với dữ liệu nào?", ["Rất lớn", "Ít item, trực quan", "Text dài", "Database"], 1),
+    createQuestion(36, "Button trong HorizontalScrollView thường dùng để?", ["Submit form", "Điều hướng", "Chọn một tùy chọn", "Nhập liệu"], 2),
+    createQuestion(37, "Background của Button có thể thay đổi bằng?", ["setText()", "setColorFilter()", "GradientDrawable", "Intent"], 2),
+    createQuestion(38, "HorizontalScrollView không phù hợp cho?", ["Gallery nhỏ", "Thanh chọn màu", "Danh sách hàng trăm item", "Menu ngang"], 2),
+    createQuestion(39, "ScrollView và HorizontalScrollView khác nhau ở?", ["Số View con", "Hướng cuộn", "Adapter", "Context"], 1),
+    createQuestion(40, "HorizontalScrollView thuộc nhóm widget nào?", ["Text", "Containers", "Animations", "Input"], 1),
+    createQuestion(41, "Resources trong Android được tích hợp vào app khi nào?", ["Runtime", "Compile time", "Install time", "Debug time"], 1),
+    createQuestion(42, "Thư mục nào chứa layout XML?", ["res/drawable", "res/layout", "res/raw", "assets"], 1),
+    createQuestion(43, "Lớp R trong Android dùng để?", ["Chạy app", "Truy cập resource", "Quản lý Activity", "Xử lý network"], 1),
+    createQuestion(44, "File strings.xml nằm trong thư mục nào?", ["res/raw", "res/layout", "res/values", "assets"], 2),
+    createQuestion(45, "Để đọc file trong res/raw, dùng hàm?", ["openFileInput()", "resources.openRawResource()", "FileInputStream()", "AssetManager.open()"], 1),
+    createQuestion(46, "Fonts thường được đặt trong thư mục nào?", ["res/fonts", "assets/fonts", "res/raw", "res/values"], 1),
+    createQuestion(47, "Hàm tạo Typeface từ font trong assets là?", ["Typeface.create()", "Typeface.fromFile()", "Typeface.createFromAsset()", "Font.create()"], 2),
+    createQuestion(48, "SharedPreferences lưu dữ liệu theo dạng?", ["Object", "JSON", "Key - Value", "XML Layout"], 2),
+    createQuestion(49, "Giá trị trong SharedPreferences phải là?", ["Object", "List", "Primitive type", "Class"], 2),
+    createQuestion(50, "File SharedPreferences được lưu ở đâu?", ["/sdcard", "/assets", "/data/data/package/shared_prefs", "/res"], 2),
+    createQuestion(51, "getSharedPreferences() dùng khi?", ["Chỉ dùng trong Activity", "Cần nhiều file preference", "Không có Context", "Lưu database"], 1),
+    createQuestion(52, "Internal storage có đặc điểm nào?", ["App khác truy cập được", "Dùng cho dữ liệu nhạy cảm", "Không an toàn", "Luôn cần permission"], 1),
+    createQuestion(53, "External storage cần gì để truy cập?", ["Adapter", "Intent", "Permission", "Fragment"], 2),
+    createQuestion(54, "Permission đọc SD card là?", ["READ_FILE", "READ_EXTERNAL_STORAGE", "ACCESS_FILE", "FILE_READ"], 1),
+    createQuestion(55, "openFileOutput() dùng để?", ["Đọc file internal", "Ghi file internal", "Đọc SD card", "Ghi database"], 1),
+    createQuestion(56, "Dữ liệu SharedPreferences thường dùng để?", ["Ảnh", "Video", "Lưu trạng thái, cấu hình", "Layout"], 2),
+    createQuestion(57, "File trong assets được truy cập bằng?", ["resources", "AssetManager", "FileInputStream", "SQLite"], 1),
+    createQuestion(58, "Resource array được định nghĩa trong file nào?", ["strings.xml", "arrays.xml", "styles.xml", "colors.xml"], 1),
+    createQuestion(59, "R.string.app_name trỏ tới?", ["Layout", "Image", "String resource", "Font"], 2),
+    createQuestion(60, "Preferences phù hợp nhất để lưu?", ["Dữ liệu lớn", "File nhị phân", "Cấu hình nhỏ, đơn giản", "Ảnh HD"], 2),
+  ];
+}
+
+function renderQuizNav() {
+  quizNav.innerHTML = "";
+
+  quizSets.forEach((quizSet, index) => {
+    const button = document.createElement("button");
+    button.className = "quiz-tab";
+    button.type = "button";
+    button.innerText = quizSet.title;
+    button.classList.toggle("active", index === currentQuizIndex);
+    button.setAttribute("aria-current", index === currentQuizIndex ? "page" : "false");
+    button.addEventListener("click", () => switchQuiz(index));
+    quizNav.appendChild(button);
+  });
+}
+
+function switchQuiz(index) {
+  if (index === currentQuizIndex) {
+    return;
+  }
+
+  currentQuizIndex = index;
+  currentQuizData = quizSets[currentQuizIndex].questions;
+  displayedQuestions = [...currentQuizData];
+  answers = new Map();
+  hasSubmitted = false;
+  resultPanel.classList.remove("show");
+  renderQuizNav();
+  updateSummary();
+  renderQuestions();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 function renderQuestions() {
   questionList.innerHTML = "";
@@ -787,6 +907,7 @@ function refreshSelections() {
 }
 
 function updateSummary(score = null) {
+  totalCount.innerText = currentQuizData.length;
   answeredCount.innerText = answers.size;
 
   if (score) {
@@ -801,7 +922,7 @@ function updateSummary(score = null) {
 function calculateScore() {
   let correct = 0;
 
-  quizData.forEach((question) => {
+  currentQuizData.forEach((question) => {
     const selected = answers.get(question.id);
     if (selected !== undefined && question.options[selected].correct) {
       correct++;
@@ -811,8 +932,8 @@ function calculateScore() {
   return {
     correct,
     answered: answers.size,
-    total: quizData.length,
-    percent: Math.round((correct / quizData.length) * 100),
+    total: currentQuizData.length,
+    percent: Math.round((correct / currentQuizData.length) * 100),
   };
 }
 
@@ -881,5 +1002,6 @@ shuffleBtn.addEventListener("click", shuffleQuestions);
 gradeBtn.addEventListener("click", gradeQuiz);
 resetBtn.addEventListener("click", resetQuiz);
 
+renderQuizNav();
 renderQuestions();
 updateSummary();
