@@ -157,6 +157,16 @@ body {
   gap: 16px;
 }
 
+.bottom-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.bottom-actions .btn {
+  min-width: 220px;
+}
+
 .question-card {
   background: #ffffff;
   border: 1px solid #dbe2ea;
@@ -362,6 +372,10 @@ body {
   .quiz-tab,
   .btn {
     width: 100%;
+  }
+
+  .bottom-actions {
+    margin-top: 16px;
   }
 
   .question-card {

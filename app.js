@@ -702,6 +702,7 @@ let currentQuizData = quizSets[currentQuizIndex].questions;
 let displayedQuestions = [...currentQuizData];
 let answers = new Map();
 let hasSubmitted = false;
+const answerLabels = ["A", "B", "C", "D"];
 
 const quizNav = document.getElementById("quizNav");
 const questionList = document.getElementById("questionList");
@@ -715,6 +716,7 @@ const resultText = document.getElementById("resultText");
 const shuffleBtn = document.getElementById("shuffleBtn");
 const gradeBtn = document.getElementById("gradeBtn");
 const resetBtn = document.getElementById("resetBtn");
+const bottomGradeBtn = document.getElementById("bottomGradeBtn");
 const resultModal = document.getElementById("resultModal");
 const modalQuizName = document.getElementById("modalQuizName");
 const modalScore = document.getElementById("modalScore");
@@ -998,7 +1000,7 @@ function renderQuestions() {
 
       const optionText = document.createElement("span");
       optionText.className = "option-text";
-      optionText.innerText = option.text;
+      optionText.innerText = `${answerLabels[optionIndex]}. ${option.text}`;
 
       label.append(radio, optionText);
       label.addEventListener("click", () => selectAnswer(question.id, optionIndex));
@@ -1098,13 +1100,13 @@ function showGrading() {
     feedback.classList.add("show");
     if (selected === undefined) {
       feedback.classList.add("unanswered");
-      feedback.innerText = `Chưa chọn đáp án. Đáp án đúng: ${question.options[correctIndex].text}`;
+      feedback.innerText = `Chưa chọn đáp án. Đáp án đúng: ${answerLabels[correctIndex]}. ${question.options[correctIndex].text}`;
     } else if (selected === correctIndex) {
       feedback.classList.add("correct");
       feedback.innerText = "Đúng.";
     } else {
       feedback.classList.add("incorrect");
-      feedback.innerText = `Sai. Đáp án đúng: ${question.options[correctIndex].text}`;
+      feedback.innerText = `Sai. Đáp án đúng: ${answerLabels[correctIndex]}. ${question.options[correctIndex].text}`;
     }
   });
 }
@@ -1157,6 +1159,7 @@ function resetQuiz() {
 shuffleBtn.addEventListener("click", shuffleQuestions);
 gradeBtn.addEventListener("click", gradeQuiz);
 resetBtn.addEventListener("click", resetQuiz);
+bottomGradeBtn.addEventListener("click", gradeQuiz);
 modalCloseBtn.addEventListener("click", closeResultModal);
 modalOkBtn.addEventListener("click", closeResultModal);
 resultModal.addEventListener("click", (event) => {
