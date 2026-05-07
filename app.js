@@ -432,8 +432,8 @@
     id: 36,
     question: "Autoconnect mặc định:",
     options: [
-      { text: "Bật sẵn", correct: true },
-      { text: "Tắt", correct: false },
+      { text: "Bật sẵn", correct: false },
+      { text: "Tắt", correct: true },
       { text: "Chỉ hoạt động với guideline", correct: false },
       { text: "Chỉ hoạt động với barrier", correct: false },
     ],
@@ -942,7 +942,7 @@ function createSecondQuizData() {
       26,
       "HorizontalScrollView kế thừa từ lớp nào?",
       ["View", "ViewGroup", "ScrollView", "FrameLayout"],
-      2,
+      3,
     ),
     createQuestion(
       27,
@@ -1562,7 +1562,7 @@ function createThirdQuizData() {
       22,
       "Which method is called when a user selects an item in a ListView?",
       ["onItemClick()", "onClickItem()", "onListSelect()", "onViewClick()"],
-      1,
+      0,
     ),
     createQuestion(
       23,
@@ -1573,7 +1573,7 @@ function createThirdQuizData() {
         "Package Manager",
         "Window Manager",
       ],
-      1,
+      0,
     ),
     createQuestion(
       24,
@@ -1624,7 +1624,7 @@ function createThirdQuizData() {
       29,
       "Which library in Android is used to manage relational databases?",
       ["WebKit", "OpenGL", "SQLite", "Media Framework"],
-      1,
+      2,
     ),
     createQuestion(
       30,
@@ -1658,7 +1658,7 @@ function createThirdQuizData() {
         "Application Framework",
         "Android Runtime",
       ],
-      1,
+      2,
     ),
     createQuestion(
       34,
